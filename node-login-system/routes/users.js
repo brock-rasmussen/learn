@@ -68,6 +68,12 @@ router.route('/login')
     res.redirect('/');
   });
 
+router.get('/logout', (req, res) => {
+  req.logout();
+  req.flash('success', 'You are now logged out.');
+  res.redirect('/users/login');
+});
+
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
@@ -78,7 +84,7 @@ passport.deserializeUser((id, done) => {
   });
 });
 
-passport.use(new LocalStrategy((email, password, done) => {
+passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
   User.getUserByEmail(email, (err, user) => {
     if (err) throw err;
     if (!user) {

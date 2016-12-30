@@ -5,21 +5,22 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
-var passport = require('passport');
 var expressValidator = require('express-validator');
-var LocalStrategy = require('passport-local').Strategy;
-var multer = require('multer');
-var upload = multer({ dest: './uploads' });
-var flash = require('connect-flash');
-var bcrypt = require('bcryptjs');
+
 var mongo = require('mongodb');
-var mongoose = require('mongoose');
-var db = mongoose.connection;
+var db = require('monk')('localhost/nodeblogsystem');
 
 var index = require('./routes/index');
-var users = require('./routes/users');
+var posts = require('./routes/posts');
+var categories = require('./routes/categories');
 
 var app = express();
+
+app.locals.moment = require('moment');
+
+app.locals.truncateText = (text, length) => {
+  return text.substring(0, length);
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -33,20 +34,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// handle sessions
+// express-session
 app.use(session({
   secret: 'secret',
   saveUninitialized: true,
   resave: true
 }));
 
-// passport
-app.use(passport.initialize());
-app.use(passport.session());
-
-// validator
+// express-validator
 app.use(expressValidator({
-  errorFormatter: (param, msg, value) => {
+  errorFormatter: function(param, msg, value) {
     var namespace = param.split('.'),
         root = namespace.shift(),
         formParam = root;
@@ -54,28 +51,30 @@ app.use(expressValidator({
     while (namespace.length) {
       formParam += `[${namespace.shift()}]`;
     }
+
     return {
       param: formParam,
-      msg: msg,
-      value: value
-    };
+      msg,
+      value
+    }
   }
 }));
-
-// express messages
-app.use(flash());
+// connect-flash
+app.use(require('connect-flash')());
 app.use((req, res, next) => {
   res.locals.messages = require('express-messages')(req, res);
   next();
 });
 
-app.get('*', (req, res, next) => {
-  res.locals.user = req.user || null;
+// Make our db accessible to our router
+app.use((req, res, next) => {
+  req.db = db;
   next();
 });
 
 app.use('/', index);
-app.use('/users', users);
+app.use('/posts', posts);
+app.use('/categories', categories);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
