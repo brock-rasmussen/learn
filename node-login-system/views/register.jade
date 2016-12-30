@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  .container
+    h1 Sign Up
+    if errors
+      .alert.alert-danger
+        ul
+          each error, i in errors
+            li #{error.msg}
+    form(method='post', action='/users/register', enctype='multipart/form-data')
+      .form-group
+        label Name
+        input.form-control(name='name', type='text', placeholder='Enter your name', required)
+      .form-group
+        label Email
+        input.form-control(name='email', type='email', placeholder='Enter your email', required)
+      .form-group
+        label Password
+        input.form-control(name='password', type='password', placeholder='Enter your name', required)
+      .form-group
+        label Confirm Password
+        input.form-control(name='passwordConfirm', type='password', placeholder='Enter your name', required)
+      .form-group
+        label Profile Image
+        input.form-control(name='profile', type='file')
+      button.btn.btn-primary(type='submit') Sign Up
