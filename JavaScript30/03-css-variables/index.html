@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Scoped CSS Variables and JS</title>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Update CSS Variables with <span class="hl">JS</span></h1>
+            <div class="controls">
+                <label for="spacing">Spacing:</label>
+                <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-unit="px">
+                
+                <label for="blur">Blur:</label>
+                <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-unit="px">
+
+                <label for="base">Base Color:</label>
+                <input id="base" type="color" name="base" value="#ffc600">
+            </div>
+
+            <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
+        </div>
+
+        <style>
+            :root {
+                --base: #ffc600;
+                --spacing: 10px;
+                --blur: 10px;
+            }
+
+            img {
+                padding: var(--spacing);
+                background: var(--base);
+                filter: blur(var(--blur));
+            }
+
+            .hl {
+                color: var(--base);
+            }
+
+            /* non-variable CSS */
+            body {
+                background: #193549;
+                color: white;
+                font-family: sans-serif;
+                font-weight: 100;
+                font-size: 10px;
+            }
+
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+
+            h1 {
+                font-size: 5rem;
+            }
+
+            .controls {
+                margin-bottom: 50px;
+            }
+
+            label {
+                font-size: 2rem;
+                display: block;
+            }
+
+            input {
+                display: block;
+                margin-bottom: 1rem;
+                width: 100%;
+            }
+
+            img {
+                max-width: 100%;
+            }
+        </style>
+
+        <script>
+            const inputs = document.querySelectorAll('.controls input');
+            const ranges = document.querySelectorAll('.controls input[type="range"]');
+
+            function handleUpdate() {
+                const unit = this.dataset.unit || '';
+                document.documentElement.style.setProperty(`--${this.name}`, `${this.value}${unit}`);
+            }
+
+            inputs.forEach(input => input.addEventListener('change', handleUpdate));
+            ranges.forEach(input => input.addEventListener('input', handleUpdate));
+        </script>
+    </body>
+</html>
