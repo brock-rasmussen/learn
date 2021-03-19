@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Type Ahead</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <form class="search-form">
+            <input id="search-input" type="text" class="search" placeholder="City or State">
+            <ul id="suggestions" class="suggestions"></ul>
+        </form>
+        <script>
+            const cities = [];
+            const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+
+            fetch(endpoint)
+                .then(res => res.json())
+                .then(json => cities.push(...json));
+
+            function search(query, cities) {
+                return cities.filter(place => {
+                    const regex = new RegExp(query, 'gi');
+                    return regex.test(place.city) || regex.test(place.state);
+                })
+            }
+
+            function highlight(search, text) {
+                const regex = new RegExp(search, 'gi');
+                return text.replace(regex, `<span class="hl">${search}</span>`);
+            }
+
+            function formatNumber(number) {
+                return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+
+            function displaySearchResults(e) {
+                const results = search(this.value, cities);
+                const html = results.map(({city, state, population}) => {
+                    return `<li>
+                        <span class="name">${highlight(this.value, city)}, ${highlight(this.value, state)}</span>
+                        <span class="population">${formatNumber(population)}</span>
+                    </li>`
+                }).join('');
+                suggestions.innerHTML = html;
+            }
+
+            const searchInput = document.getElementById('search-input');
+            const suggestions = document.getElementById('suggestions');
+
+            searchInput.addEventListener('input', displaySearchResults);
+        </script>
+    </body>
+</html>

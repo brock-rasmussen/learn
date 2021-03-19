@@ -41,4 +41,5 @@
 - Comparison Operators: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness
 
 `let` and `const` are not "hoisted" and are block-scoped.
+
 `var` is "hoisted" and is function-scoped.
