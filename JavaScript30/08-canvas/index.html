@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>HTML5 Canvas</title>
+    </head>
+    <body>
+        <canvas id="canvas" width="800" height="800"></canvas>
+        <script>
+            const MAX_STROKE_WIDTH = 100;
+            const MIN_STROKE_WIDTH = 1;
+
+            const canvas = document.getElementById('canvas');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const ctx = canvas.getContext('2d');
+            ctx.lineJoin = 'round';
+            ctx.lineCap = 'round';
+            ctx.lineWidth = MAX_STROKE_WIDTH;
+
+            const state = {
+                isGrowing: true,
+                point: [0, 0],
+                hue: 0,
+                width: 100,
+            }
+
+            function draw(e) {
+                ctx.strokeStyle = `hsl(${state.hue}, 100%, 50%)`;
+                state.hue++;
+                if (state.hue >= 360) {
+                    state.hue = 0;
+                }
+
+                ctx.beginPath();
+                ctx.moveTo(...state.point);
+                state.point = [e.offsetX, e.offsetY];
+
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.stroke();
+
+                if (ctx.lineWidth >= MAX_STROKE_WIDTH || ctx.lineWidth <= MIN_STROKE_WIDTH) {
+                    state.isGrowing = !state.isGrowing;
+                }
+
+                if (state.isGrowing) {
+                    ctx.lineWidth++;
+                } else {
+                    ctx.lineWidth--;
+                }
+            }
+
+            document.addEventListener('mousedown', (e) => {
+                state.point = [e.offsetX, e.offsetY];
+                canvas.addEventListener('mousemove', draw);
+            });
+            document.addEventListener('mouseup', () => canvas.removeEventListener('mousemove', draw));
+        </script>
+        <style>
+            html, body {
+                margin: 0;
+            }
+        </style>
+    </body>
+</html>
