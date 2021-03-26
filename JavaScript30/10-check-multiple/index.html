@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Check Multiple</title>
+    </head>
+    <body>
+        <style>
+            html {
+                font-family: sans-serif;
+                background: #ffc600;
+            }
+
+            .inbox {
+                max-width: 400px;
+                margin: 50px auto; 
+                background: white;
+                border-radius: 5px;
+                box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
+            }
+
+            .item {
+                display: flex;
+                align-items: center;
+                border-bottom: 1px solid #f1f1f1;
+            }
+
+            .item:last-child {
+                border-bottom: 0;
+            }
+
+            input:checked + label {
+                background: #f9f9f9;
+                text-decoration: line-through;
+            }
+
+            input[type="checkbox"] {
+                margin: 20px;
+            }
+
+            label {
+                display: block;
+                margin: 0;
+                padding: 20px;
+                transition: background 0.2s;
+                flex: 1;
+                font-family: sans-serif;
+                font-size: 20px;
+                font-weight: 200;
+                border-left: 1px solid #d1e2ff;
+            }
+        </style>
+        <div class="inbox">
+            <div class="item">
+                <input type="checkbox" id="item-1">
+                <label for="item-1">This is an inbox layout</label>
+            </div>
+            <div class="item">
+                <input type="checkbox" id="item-2">
+                <label for="item-2">Check one item</label>
+            </div>
+            <div class="item">
+                <input type="checkbox" id="item-3">
+                <label for="item-3">Hold down your Shift key</label>
+            </div>
+            <div class="item">
+                <input type="checkbox" id="item-4">
+                <label for="item-4">Check a lower item</label>
+            </div>
+            <div class="item">
+                <input type="checkbox" id="item-5">
+                <label for="item-5">Everyting in between should also be set to checked</label>
+            </div>
+            <div class="item">
+                <input type="checkbox" id="item-6">
+                <label for="item-6">Try to do it without any libraries</label>
+            </div>
+            <div class="item">
+                <input type="checkbox" id="item-7">
+                <label for="item-7">Just regular JavaScript</label>
+            </div>
+            <div class="item">
+                <input type="checkbox" id="item-8">
+                <label for="item-8">Good luck!</label>
+            </div>
+            <div class="item">
+                <input type="checkbox" id="item-9">
+                <label for="item-9">Don't forget to tweet your results!</label>
+            </div>
+        </div>
+
+        <script>
+            const checkboxes = [...document.querySelectorAll('.inbox input[type="checkbox"]')];
+            
+            const state = {
+                selected: -1,
+            }
+
+            checkboxes.forEach(checkbox => checkbox.addEventListener('click', function(e) {
+                if (!this.checked) {
+                    state.selected = -1;
+                    return;
+                }
+
+                let index = checkboxes.findIndex(el => el === this);
+                
+                if (!e.shiftKey || state.selected < 0) {
+                    state.selected = index;
+                    return;
+                }
+
+                let start = index > state.selected ? state.selected : index;
+                let end = (index > state.selected ? index : state.selected) + 1;
+
+                let _checkboxes = checkboxes.slice(start, end);
+                _checkboxes.forEach(_checkbox => _checkbox.checked = true);
+
+                state.selected = index;
+            }))
+        </script>
+    </body>
+</html>

@@ -43,3 +43,20 @@
 `let` and `const` are not "hoisted" and are block-scoped.
 
 `var` is "hoisted" and is function-scoped.
+
+- Expression: A unit of code that results in a value.
+- Statement: A unit of code that doesn't result in a value.
+
+Function statement
+```
+function greet() { console.log('hi'); }
+```
+
+Function expression
+```
+var greet = function() { console.log('hi'); }
+```
+
+- Anonymous function: A function that doesn't have a name.
+- Mutate: To change something.
+- Immutable: Something that can't be changed.
