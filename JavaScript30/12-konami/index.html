@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Konami Code</title>
+        <script src="http://www.cornify.com/js/cornify.js"></script>
+    </head>
+    <body>
+        <script>
+            const pressed = [];
+            const code = 'wesbos';
+
+            window.addEventListener('keyup', (e) => {
+                pressed.push(e.key);
+                pressed.splice(-code.length - 1, pressed.length - code.length);
+
+                if (pressed.join('').includes(code)) {
+                    cornify_add();
+                }
+            })
+        </script>
+    </body>
+</html>

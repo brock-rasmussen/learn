@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Reference vs Copy</title>
+    </head>
+    <body>
+        <script>
+            // Start with strings, numbers and booleans
+            let str1 = 'original string';
+            let str2 = str1;
+            console.log(str1, str2);
+
+            str1 = 'new string';
+            console.log(str1, str2);
+
+            // Let's say we have an array
+            const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
+
+            // and we want to make a copy of it.
+            const teamRef = players;
+            console.log(players, teamRef);
+
+            // You might think we can do something like this:
+            // teamRef[3] = 'Lux';
+            console.log(players, teamRef);
+
+            // However when we update our "copied" array, we have edited the original also.
+            // This is because our "copied" array is only a reference to the original array, not a true copy.
+
+            // To fix this, we make a true copy instead.
+            const teamCopy = players.slice();
+
+            // Now when we make a change to our copied array, the original array is untouched.
+            teamCopy[3] = 'Lux';
+            console.log(players, teamCopy);
+
+            // Other ways to copy an array.
+            // [].concat(players);
+            // [...players];
+            // Array.from(players);
+
+            // The same thing happens with objects.
+            const person = {
+                name: 'Wes Bos',
+                age: 80,
+            };
+
+            const personRef = person;
+            personRef.number = 99;
+
+            // `captain` is only a reference to the same object that `person` references.
+
+            // To instead make a copy of an object, you can do this:
+            const personCopy = Object.assign({}, person, { number: 99, age: 12 });
+
+            // Other ways to copy an object.
+            // {...person}
+
+            // Caveat, Object.assign only goes one level deep. Nested objects/arrays will still be references.
+            
+            // To do a deep clone you can do this:
+            // JSON.parse(JSON.stringify(person));
+        </script>
+    </body>
+</html>
